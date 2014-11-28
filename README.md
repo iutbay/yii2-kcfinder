@@ -22,3 +22,78 @@ or add
 ```
 
 to the require section of your application's `composer.json` file.
+
+Use with 2amigos/yii2-ckeditor-widget
+-------------------------------------
+You should extend ```\dosamigos\ckeditor\CKEditor```, e.g. :
+
+```php
+namespace app\widgets;
+
+use yii\helpers\ArrayHelper;
+
+use iutbay\yii2kcfinder\KCFinderAsset;
+
+class CKEditor extends \dosamigos\ckeditor\CKEditor
+{
+
+	public $enableKCFinder = true;
+
+	/**
+	 * Registers CKEditor plugin
+	 */
+	protected function registerPlugin()
+	{
+		if ($this->enableKCFinder)
+		{
+			$this->registerKCFinder();
+		}
+
+		parent::registerPlugin();
+	}
+
+	/**
+	 * Registers KCFinder
+	 */
+	protected function registerKCFinder()
+	{
+		$register = KCFinderAsset::register($this->view);
+		$kcfinderUrl = $register->baseUrl;
+
+		$browseOptions = [
+			'filebrowserBrowseUrl' => $kcfinderUrl . '/browse.php?opener=ckeditor&type=files',
+			'filebrowserUploadUrl' => $kcfinderUrl . '/upload.php?opener=ckeditor&type=files',
+		];
+
+		$this->clientOptions = ArrayHelper::merge($browseOptions, $this->clientOptions);
+	}
+
+}
+```
+
+You should then set KCFinder options using session var, e.g. :
+
+```php
+// kcfinder options
+// http://kcfinder.sunhater.com/install#dynamic
+$kcfOptions = array_merge(KCFinder::$kcfDefaultOptions, [
+	'uploadURL' => Yii::getAlias('@web').'/upload',
+	'access' => [
+		'files' => [
+			'upload' => true,
+			'delete' => false,
+			'copy' => false,
+			'move' => false,
+			'rename' => false,
+		],
+		'dirs' => [
+			'create' => true,
+			'delete' => false,
+			'rename' => false,
+		],
+	],
+]);
+
+// Set kcfinder session options
+Yii::$app->session->set('KCFINDER', $kcfOptions);
+```
