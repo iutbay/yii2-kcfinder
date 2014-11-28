@@ -11,7 +11,8 @@
 		}
 	],
 	"require": {
-		"sunhater/kcfinder": "*"
+		"sunhater/kcfinder": "*",
+		"iutbay/yii2-fontawesome" : "dev-master"
 	},
 	"autoload": {
 		"psr-4": {"iutbay\\yii2kcfinder\\": ""}
