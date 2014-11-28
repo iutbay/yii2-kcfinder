@@ -1,0 +1,19 @@
+{
+	"name": "iutbay/yii2-kcfinder",
+	"description": "KCFinder for Yii2",
+	"keywords": ["yii2", "extension", "kcfinder"],
+	"homepage": "https://github.com/iutbay/yii2-kcfinder",
+	"type": "yii2-extension",
+	"authors": [
+		{
+			"name": "Kevin LEVRON",
+			"email": "kevin.levron@gmail.com"
+		}
+	],
+	"require": {
+		"sunhater/kcfinder": "*"
+	},
+	"autoload": {
+		"psr-4": {"iutbay\\yii2kcfinder\\": ""}
+	}
+}
