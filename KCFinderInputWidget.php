@@ -7,6 +7,7 @@ use yii\helpers\Html;
 use yii\helpers\Json;
 use yii\web\View;
 use yii\widgets\InputWidget;
+use yii\bootstrap\Modal;
 
 use iutbay\yii2fontawesome\FontAwesome;
 
@@ -24,12 +25,17 @@ class KCFinderInputWidget extends KCFinder
     public $buttonLabel = 'Add Media';
 
     /**
+     * Modal title
+     * @var string
+     */
+    public $modalTitle = 'Media Manager';
+
+    /**
      * Button options
      * @var array
      */
     public $buttonOptions = [];
-
-    public $template = '<div class="input-group">{button}</div><div class="input-group">{thumbs}</div>';
+    public $template = '{button}{thumbs}';
     public $thumbTemplate = '<li><img src="{thumbSrc}" /><input type="hidden" name="{inputName}" value="{inputValue}"></li>';
 
     /**
@@ -38,9 +44,9 @@ class KCFinderInputWidget extends KCFinder
     public function init()
     {
         parent::init();
-        
+
         $this->clientOptions['thumbsDir'] = $this->kcfOptions['thumbsDir'];
-        $this->clientOptions['thumbsSelector'] = '#'.$this->getThumbsId();
+        $this->clientOptions['thumbsSelector'] = '#' . $this->getThumbsId();
         $this->clientOptions['thumbTemplate'] = $this->thumbTemplate;
 
         $this->buttonOptions['id'] = $this->getButtonId();
@@ -56,31 +62,49 @@ class KCFinderInputWidget extends KCFinder
     {
         $this->registerClientScript();
 
-        $button = Html::button(FontAwesome::icon('picture-o').' '.$this->buttonLabel, $this->buttonOptions);
-
-        $thumbs = '<ul class="kcf-thumbs" id="'.$this->getThumbsId().'"></ul>';
+        $button = Html::button(FontAwesome::icon('picture-o') . ' ' . $this->buttonLabel, $this->buttonOptions);
         
+        if ($this->iframe) {
+            $button.= Modal::widget([
+                'id' => $this->getIFrameModalId(),
+                'header' => Html::tag('h4', $this->modalTitle, ['class' => 'modal-title']),
+                'size' => Modal::SIZE_LARGE,
+                'options' => [
+                    'class' => 'kcfinder-modal',
+                ],
+            ]);
+        }
+
+        $thumbs = '<ul class="kcf-thumbs" id="' . $this->getThumbsId() . '"></ul>';
+
         echo Html::tag('div', strtr($this->template, [
             '{button}' => $button,
             '{thumbs}' => $thumbs,
-        ]), ['class'=>'kcf-input-group']);
+                ]), ['class' => 'kcf-input-group']);
     }
-    
+
     /**
      * Registers the needed JavaScript.
      */
     public function registerClientScript()
     {
-        static $kcfAssetPathRegistered = false;
+//        static $kcfAssetPathRegistered = false;
+//        $view = $this->getView();
+//        KCFinderWidgetAsset::register($view);
+//        
+//        if (!$kcfAssetPathRegistered)
+//        {
+//            $assetPath = Json::encode(Yii::$app->assetManager->getPublishedUrl((new KCFinderAsset)->sourcePath));
+//            $view->registerJs("var kcfAssetPath = $assetPath;", View::POS_BEGIN);
+//            $kcfAssetPathRegistered = true;
+//        }
 
         $view = $this->getView();
         KCFinderWidgetAsset::register($view);
+        $this->clientOptions['kcfUrl'] = Yii::$app->assetManager->getPublishedUrl((new KCFinderAsset)->sourcePath);
 
-        if (!$kcfAssetPathRegistered)
-        {
-            $assetPath = Json::encode(Yii::$app->assetManager->getPublishedUrl((new KCFinderAsset)->sourcePath));
-            $view->registerJs("var kcfAssetPath = $assetPath;", View::POS_BEGIN);
-            $kcfAssetPathRegistered = true;
+        if ($this->iframe) {
+             $this->clientOptions['iframeModalId'] = $this->getIFrameModalId();
         }
 
         $clientOptions = Json::encode($this->clientOptions);
@@ -89,12 +113,17 @@ class KCFinderInputWidget extends KCFinder
 
     public function getButtonId()
     {
-        return $this->getId().'-button';
+        return $this->getId() . '-button';
     }
 
     public function getThumbsId()
     {
-        return $this->getId().'-thumbs';
+        return $this->getId() . '-thumbs';
+    }
+
+    public function getIFrameModalId()
+    {
+        return $this->getId() . '-iframe';
     }
 
 }

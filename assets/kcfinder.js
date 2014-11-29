@@ -5,7 +5,9 @@
  */
 (function($) {
 
-	// KCFinderInputWidget constructor
+	/**
+	 * Constructor
+	 */
 	var KCFinderInputWidget = function($element, options){
 		this.options = options;
 		this.$button = $element;
@@ -17,8 +19,11 @@
 		}, this));
 	};
 
-	// KCFinderInputWidget default options
+	/**
+	 * Default options
+	 */
 	KCFinderInputWidget.DEFAULTS = {
+		iframe: true,
 		multiple: false,
 		browseOptions: {},
 		thumbsDir: '.thumbs'
@@ -55,26 +60,40 @@
 	 * Open KCFinderInputWidget
 	 */
 	KCFinderInputWidget.prototype.open = function(){
+		if (this.options.iframe) {
+			var $iframeModal = $('#'+this.options.iframeModalId);
+		}
+
 		var kthis = this;
 		window.KCFinder = {
 			callBack: function(url) {
                 console.log('callBack : '+url);
 				kthis.addThumb(url);
 				window.KCFinder = null;
+				if ($iframeModal) $iframeModal.modal('hide');
 			},
 			callBackMultiple: function(files) {
                 console.log('callBackMultiple : '+files);
-				window.KCFinder = null;
                 for (var i; i < files.length; i++) {
 					kthis.addThumb(files[i]);
                 }
+				window.KCFinder = null;
+				if ($iframeModal) $iframeModal.modal('hide');
 			}
 		};
 
-		window.open(kcfAssetPath+'/browse.php?'+$.param(this.options.browseOptions),
-			'kcfinder', 'status=0, toolbar=0, location=0, menubar=0, ' +
-			'directories=0, resizable=1, scrollbars=0, width=800, height=600'
-		);
+		var kcfUrl = this.options.kcfUrl + '/browse.php?' + $.param(this.options.browseOptions);
+		if ($iframeModal) {
+			$iframeModal.find('.modal-body').html('<iframe name="kcfinder-iframe" src="' + kcfUrl + '" class="kcfinder-iframe" ' +
+				'frameborder="0" width="100%" height="100%" marginwidth="0" marginheight="0" scrolling="no" />');
+			$iframeModal.modal('show');
+		} else {
+			window.open(kcfUrl,
+				'kcfinder', 'status=0, toolbar=0, location=0, menubar=0, ' +
+				'directories=0, resizable=1, scrollbars=0, width=800, height=600'
+			);
+		}
+
 	};
 
 	/**

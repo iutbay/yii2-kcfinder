@@ -14,102 +14,105 @@ use yii\web\View;
 class KCFinder extends \yii\widgets\InputWidget
 {
 
-	/**
-	 * Multiple selection
-	 * @var boolean
-	 */
-	public $multiple = false;
+    /**
+     * Multiple selection
+     * @var boolean
+     */
+    public $multiple = false;
 
-	/**
-	 * KCFinder dynamic settings (using session)
-	 * @link http://kcfinder.sunhater.com/install#dynamic
-	 * @var array
-	 */
-	public $kcfOptions = [];
+    /**
+     * IFrame mode
+     * @var boolean
+     */
+    public $iframe = true;
 
-	/**
-	 * KCFinder input parameters
-	 * @link http://kcfinder.sunhater.com/integrate#input
-	 * @var array
-	 */
-	public $kcfBrowseOptions = [];
+    /**
+     * KCFinder dynamic settings (using session)
+     * @link http://kcfinder.sunhater.com/install#dynamic
+     * @var array
+     */
+    public $kcfOptions = [];
 
-	/**
-	 * KCFinder client options
-	 * @var array
-	 */
-	public $clientOptions = [];
+    /**
+     * KCFinder input parameters
+     * @link http://kcfinder.sunhater.com/integrate#input
+     * @var array
+     */
+    public $kcfBrowseOptions = [];
 
-	/**
-	 * KCFinder default dynamic settings
-	 * @link http://kcfinder.sunhater.com/install#dynamic
-	 * @var array
-	 */
-	public static $kcfDefaultOptions = [
-		'disabled' => false,
-		'denyZipDownload' => true,
-		'denyUpdateCheck' => true,
-		'denyExtensionRename' => true,
-		'theme' => 'default',
-		'access' => [ // @link http://kcfinder.sunhater.com/install#_access
-			'files' => [
-				'upload' => false,
-				'delete' => false,
-				'copy' => false,
-				'move' => false,
-				'rename' => false,
-			],
-			'dirs' => [
-				'create' => false,
-				'delete' => false,
-				'rename' => false,
-			],
-		],
-		'types' => [  // @link http://kcfinder.sunhater.com/install#_types
-			'files' => [
-				'type' => '',
-			],
-		],
-		'thumbsDir' => '.thumbs',
-		'thumbWidth' => 100,
-		'thumbHeight' => 100,
-	];
+    /**
+     * KCFinder client options
+     * @var array
+     */
+    public $clientOptions = [];
 
-	/**
-	 * Initializes the widget.
-	 */
-	public function init()
-	{
-		parent::init();
+    /**
+     * KCFinder default dynamic settings
+     * @link http://kcfinder.sunhater.com/install#dynamic
+     * @var array
+     */
+    public static $kcfDefaultOptions = [
+        'disabled' => false,
+        'denyZipDownload' => true,
+        'denyUpdateCheck' => true,
+        'denyExtensionRename' => true,
+        'theme' => 'default',
+        'access' => [ // @link http://kcfinder.sunhater.com/install#_access
+            'files' => [
+                'upload' => false,
+                'delete' => false,
+                'copy' => false,
+                'move' => false,
+                'rename' => false,
+            ],
+            'dirs' => [
+                'create' => false,
+                'delete' => false,
+                'rename' => false,
+            ],
+        ],
+        'types' => [  // @link http://kcfinder.sunhater.com/install#_types
+            'files' => [
+                'type' => '',
+            ],
+        ],
+        'thumbsDir' => '.thumbs',
+        'thumbWidth' => 100,
+        'thumbHeight' => 100,
+    ];
 
-		if (!isset($this->kcfOptions['uploadURL']))
-		{
-			$this->kcfOptions['uploadURL'] = Yii::getAlias('@web/upload');
-			//$this->kcfOptions['uploadDir'] = Yii::getAlias('@app/web/upload');
-		}
+    /**
+     * Initializes the widget.
+     */
+    public function init()
+    {
+        parent::init();
 
-		$this->kcfOptions = array_merge(self::$kcfDefaultOptions, $this->kcfOptions);
-		Yii::$app->session['KCFINDER'] = $this->kcfOptions;
+        if (!isset($this->kcfOptions['uploadURL'])) {
+            $this->kcfOptions['uploadURL'] = Yii::getAlias('@web/upload');
+            $this->kcfOptions['uploadDir'] = Yii::getAlias('@app/web/upload');
+        }
 
-		$this->clientOptions['browseOptions'] = $this->kcfBrowseOptions;
-		$this->clientOptions['uploadURL'] = $this->kcfOptions['uploadURL'];
-		$this->clientOptions['multiple'] = $this->multiple;
-		$this->clientOptions['inputName'] = $this->getInputName();
-	}
+        $this->kcfOptions = array_merge(self::$kcfDefaultOptions, $this->kcfOptions);
+        Yii::$app->session['KCFINDER'] = $this->kcfOptions;
 
-	/**
-	 * @return string input name
-	 */
-	public function getInputName()
-	{
-		if ($this->hasModel())
-		{
-			return Html::getInputName($this->model, $this->attribute);
-		}
-		else
-		{
-			return $this->name;
-		}
-	}
+        $this->clientOptions['browseOptions'] = $this->kcfBrowseOptions;
+        $this->clientOptions['uploadURL'] = $this->kcfOptions['uploadURL'];
+        $this->clientOptions['multiple'] = $this->multiple;
+        $this->clientOptions['iframe'] = $this->iframe;
+        $this->clientOptions['inputName'] = $this->getInputName();
+    }
+
+    /**
+     * @return string input name
+     */
+    public function getInputName()
+    {
+        if ($this->hasModel()) {
+            return Html::getInputName($this->model, $this->attribute);
+        } else {
+            return $this->name;
+        }
+    }
 
 }
