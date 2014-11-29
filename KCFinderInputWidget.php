@@ -85,7 +85,18 @@ class KCFinderInputWidget extends KCFinder
             ]);
         }
 
-        $thumbs = '<ul class="kcf-thumbs" id="' . $this->getThumbsId() . '"></ul>';
+        $thumbs = '';
+        if ($this->hasModel() && is_array($this->model->{$this->attribute})) {
+            $images = $this->model->{$this->attribute};
+            foreach ($images as $path) {
+                $thumbs.= strtr($this->thumbTemplate, [
+                    '{thumbSrc}' => $this->getThumbSrc($path),
+                    '{inputName}' => $this->getInputName(),
+                    '{inputValue}' => $path,
+                ]);
+            }
+        }
+        $thumbs = Html::tag('ul', $thumbs, ['id' => $this->getThumbsId(), 'class' => 'kcf-thumbs']);
 
         echo Html::tag('div', strtr($this->template, [
             '{button}' => $button,

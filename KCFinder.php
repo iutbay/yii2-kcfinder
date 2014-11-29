@@ -102,6 +102,18 @@ class KCFinder extends \yii\widgets\InputWidget
         $this->clientOptions['iframe'] = $this->iframe;
         $this->clientOptions['inputName'] = $this->getInputName();
     }
+    
+    /**
+     * @param type $path
+     * @return string thumb src
+     */
+    public function getThumbSrc($path)
+    {
+        return str_replace(
+            $this->kcfOptions['uploadURL'],
+            $this->kcfOptions['uploadURL'].'/'.$this->kcfOptions['thumbsDir'],
+            $path);
+    }
 
     /**
      * @return string input name
