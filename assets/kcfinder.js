@@ -8,12 +8,25 @@
 	/**
 	 * Constructor
 	 */
-	var KCFinderInputWidget = function($element, options){
+	var KCFinderInputWidget = function($element, options) {
 		this.options = options;
 		this.$button = $element;
 		this.$thumbs = $(this.options.thumbsSelector);
+		
+		// sortable
+		this.$thumbs.sortable({
+			//handle: '.header',
+			containment: 'parent',
+			placeholder: 'placeholder',
+			connectWith: '.sortable'
+		});
 
-		$element.on('click', $.proxy(function(e){
+		// remove handler
+		this.$thumbs.on('click', '.remove span', function() {
+			$(this).closest('li').remove();
+		});
+
+		$element.on('click', $.proxy(function(e) {
 			e.preventDefault();
 			this.open();
 		}, this));
@@ -33,52 +46,63 @@
 	 * Add thumb
 	 * @param string url
 	 */
+	KCFinderInputWidget.prototype.clearThumbs = function() {
+		// empty list
+		this.$thumbs.text('');
+	};
+
+	/**
+	 * Add thumb
+	 * @param string url
+	 */
 	KCFinderInputWidget.prototype.addThumb = function(url) {
 		// empty list
 		if (!this.options.multiple) {
-			this.$thumbs.text('');
+			this.clearThumbs();
 		}
 
 		// thumb url
 		var uploadURL = this.options.uploadURL,
-		    thumbsUrl = uploadURL+'/'+this.options.thumbsDir,
-		    thumbUrl = url;
-		if (url.search(thumbsUrl)==-1) {
+			thumbsUrl = uploadURL + '/' + this.options.thumbsDir,
+			thumbUrl = url;
+		if (url.search(thumbsUrl) == -1) {
 			thumbUrl = url.replace(uploadURL, thumbsUrl);
 		}
 
 		// add thumb
 		var tpl = this.options.thumbTemplate;
 		var thumb = tpl
-			.replace('{thumbSrc}', thumbUrl)
-			.replace('{inputName}', this.options.inputName)
-			.replace('{inputValue}', url);
+				.replace('{thumbSrc}', thumbUrl)
+				.replace('{inputName}', this.options.inputName)
+				.replace('{inputValue}', url);
 		this.$thumbs.append(thumb);
 	};
 
 	/**
 	 * Open KCFinderInputWidget
 	 */
-	KCFinderInputWidget.prototype.open = function(){
+	KCFinderInputWidget.prototype.open = function() {
 		if (this.options.iframe) {
-			var $iframeModal = $('#'+this.options.iframeModalId);
+			var $iframeModal = $('#' + this.options.iframeModalId);
 		}
 
 		var kthis = this;
 		window.KCFinder = {
 			callBack: function(url) {
-                console.log('callBack : '+url);
+				console.log('callBack : ' + url);
 				kthis.addThumb(url);
 				window.KCFinder = null;
-				if ($iframeModal) $iframeModal.modal('hide');
+				if ($iframeModal)
+					$iframeModal.modal('hide');
 			},
 			callBackMultiple: function(files) {
-                console.log('callBackMultiple : '+files);
-                for (var i; i < files.length; i++) {
+				console.log('callBackMultiple : ' + files);
+				for (var i=0; i < files.length; i++) {
 					kthis.addThumb(files[i]);
-                }
+				}
 				window.KCFinder = null;
-				if ($iframeModal) $iframeModal.modal('hide');
+				if ($iframeModal)
+					$iframeModal.modal('hide');
 			}
 		};
 
@@ -100,7 +124,7 @@
 	 * JQuery plugin
 	 */
 	$.fn.KCFinderInputWidget = function(option) {
-		return this.each(function () {
+		return this.each(function() {
 			var $this = $(this);
 			var data = $this.data('KCFinderInputWidget');
 			var options = $.extend({}, KCFinderInputWidget.DEFAULTS, $this.data(), typeof option == 'object' && option);
@@ -111,5 +135,5 @@
 				data[option]();
 		});
 	};
-	
+
 }(jQuery));

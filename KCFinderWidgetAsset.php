@@ -23,6 +23,7 @@ class KCFinderWidgetAsset extends AssetBundle
     ];
     public $depends = [
         'yii\web\JqueryAsset',
+        'yii\jui\JuiAsset',
         'iutbay\yii2kcfinder\KCFinderAsset',
     ];
 

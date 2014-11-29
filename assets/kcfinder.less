@@ -1,15 +1,48 @@
 .kcfinder-modal {
 	.kcfinder-iframe {
-		min-height:300px;
-		
-		#left {
-			display:none;
-		}
+		min-height:350px;
 	}
 }
 
 .kcf-input-group {
 	.kcf-thumbs {
 		list-style-type: none;
+		margin: 10px -5px;
+		padding: 0;
+
+		li {
+			position:relative;
+			display:inline-block;
+			margin: 5px;
+			
+			.remove {
+				position: absolute;
+				right:0;
+				background-color: #efefef;
+				padding: 0 2px;
+				background-color: rgba(255,255,255,0.75);
+				border-radius: 0 0 0 4px;
+				cursor:pointer;
+				display:none;
+			}
+		}
+		
+		li:hover {
+			.remove {
+				display:block;
+			}
+		}
+		
+		.sortable {
+			cursor: move;
+		}
+
+		.placeholder {
+			vertical-align: middle;
+			background-color: #e0e0e0;
+			border: 1px dashed #808080;
+			min-width:100px;
+			min-height:50px;
+		}
 	}
 }

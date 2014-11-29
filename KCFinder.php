@@ -109,7 +109,9 @@ class KCFinder extends \yii\widgets\InputWidget
     public function getInputName()
     {
         if ($this->hasModel()) {
-            return Html::getInputName($this->model, $this->attribute);
+            $inputName = Html::getInputName($this->model, $this->attribute);
+            $inputName.= $this->multiple ? '[]' : '';
+            return $inputName;
         } else {
             return $this->name;
         }

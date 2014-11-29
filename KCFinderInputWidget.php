@@ -25,18 +25,28 @@ class KCFinderInputWidget extends KCFinder
     public $buttonLabel = 'Add Media';
 
     /**
+     * Button options
+     * @var array
+     */
+    public $buttonOptions = [];
+
+    /**
      * Modal title
      * @var string
      */
     public $modalTitle = 'Media Manager';
 
     /**
-     * Button options
+     * Main template
      * @var array
      */
-    public $buttonOptions = [];
     public $template = '{button}{thumbs}';
-    public $thumbTemplate = '<li><img src="{thumbSrc}" /><input type="hidden" name="{inputName}" value="{inputValue}"></li>';
+
+    /**
+     * Thumb template
+     * @var array
+     */
+    public $thumbTemplate = '<li class="sortable"><div class="remove"><span class="fa fa-trash"></span></div><img src="{thumbSrc}" /><input type="hidden" name="{inputName}" value="{inputValue}"></li>';
 
     /**
      * Initializes the widget.
@@ -52,7 +62,7 @@ class KCFinderInputWidget extends KCFinder
         $this->buttonOptions['id'] = $this->getButtonId();
 
         Html::addCssClass($this->options, 'form-control');
-        Html::addCssClass($this->buttonOptions, 'kcf btn btn-default');
+        Html::addCssClass($this->buttonOptions, 'btn btn-default');
     }
 
     /**
@@ -80,7 +90,7 @@ class KCFinderInputWidget extends KCFinder
         echo Html::tag('div', strtr($this->template, [
             '{button}' => $button,
             '{thumbs}' => $thumbs,
-                ]), ['class' => 'kcf-input-group']);
+        ]), ['class' => 'kcf-input-group']);
     }
 
     /**
@@ -88,17 +98,6 @@ class KCFinderInputWidget extends KCFinder
      */
     public function registerClientScript()
     {
-//        static $kcfAssetPathRegistered = false;
-//        $view = $this->getView();
-//        KCFinderWidgetAsset::register($view);
-//        
-//        if (!$kcfAssetPathRegistered)
-//        {
-//            $assetPath = Json::encode(Yii::$app->assetManager->getPublishedUrl((new KCFinderAsset)->sourcePath));
-//            $view->registerJs("var kcfAssetPath = $assetPath;", View::POS_BEGIN);
-//            $kcfAssetPathRegistered = true;
-//        }
-
         $view = $this->getView();
         KCFinderWidgetAsset::register($view);
         $this->clientOptions['kcfUrl'] = Yii::$app->assetManager->getPublishedUrl((new KCFinderAsset)->sourcePath);
