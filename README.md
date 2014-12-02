@@ -32,7 +32,7 @@ use iutbay\yii2kcfinder\KCFinderInputWidget;
 
 echo KCFinderInputWidget::widget([
 	'name' => 'image',
-?>
+]);
 ```
 
 With model and ActiveForm :
@@ -41,7 +41,7 @@ use iutbay\yii2kcfinder\KCFinderInputWidget;
 
 echo $form->field($model, 'images')->widget(KCFinderInputWidget::className(), [
 	'multiple' => true,
-])
+]);
 ```
 
 Use with 2amigos/yii2-ckeditor-widget
