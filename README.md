@@ -23,6 +23,27 @@ or add
 
 to the require section of your application's `composer.json` file.
 
+Widget Use
+----------
+
+Without model :
+```php
+use iutbay\yii2kcfinder\KCFinderInputWidget;
+
+echo KCFinderInputWidget::widget([
+	'name' => 'image',
+?>
+```
+
+With model and ActiveForm :
+```php
+use iutbay\yii2kcfinder\KCFinderInputWidget;
+
+echo $form->field($model, 'images')->widget(KCFinderInputWidget::className(), [
+	'multiple' => true,
+])
+```
+
 Use with 2amigos/yii2-ckeditor-widget
 -------------------------------------
 You should extend ```\dosamigos\ckeditor\CKEditor```, e.g. :
