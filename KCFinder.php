@@ -3,6 +3,7 @@
 namespace iutbay\yii2kcfinder;
 
 use Yii;
+use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\helpers\Json;
 use yii\web\View;
@@ -88,10 +89,13 @@ class KCFinder extends \yii\widgets\InputWidget
     {
         parent::init();
 
-        if (!isset($this->kcfOptions['uploadURL'])) {
-            $this->kcfOptions['uploadURL'] = Yii::getAlias('@web/upload');
-            $this->kcfOptions['uploadDir'] = Yii::getAlias('@app/web/upload');
-        }
+        $this->kcfOptions['uploadURL'] = ArrayHelper::getValue($this->kcfOptions, 'uploadURL', '@web/upload');
+        $this->kcfOptions['uploadDir'] = ArrayHelper::getValue($this->kcfOptions, 'uploadDir', '@app/web/upload');
+        $this->kcfOptions['uploadURL'] = Yii::getAlias($this->kcfOptions['uploadURL']);
+        $this->kcfOptions['uploadDir'] = Yii::getAlias($this->kcfOptions['uploadDir']);
+        
+        var_dump($this->kcfOptions['uploadURL']);
+        var_dump($this->kcfOptions['uploadDir']);
 
         $this->kcfOptions = array_merge(self::$kcfDefaultOptions, $this->kcfOptions);
         Yii::$app->session['KCFINDER'] = $this->kcfOptions;
