@@ -94,9 +94,6 @@ class KCFinder extends \yii\widgets\InputWidget
         $this->kcfOptions['uploadURL'] = Yii::getAlias($this->kcfOptions['uploadURL']);
         $this->kcfOptions['uploadDir'] = Yii::getAlias($this->kcfOptions['uploadDir']);
         
-        var_dump($this->kcfOptions['uploadURL']);
-        var_dump($this->kcfOptions['uploadDir']);
-
         $this->kcfOptions = array_merge(self::$kcfDefaultOptions, $this->kcfOptions);
         Yii::$app->session['KCFINDER'] = $this->kcfOptions;
 
