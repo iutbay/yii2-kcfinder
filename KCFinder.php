@@ -110,6 +110,7 @@ class KCFinder extends \yii\widgets\InputWidget
      */
     public function getThumbSrc($path)
     {
+        $path = str_replace('%', '%25', $path);
         return str_replace(
             $this->kcfOptions['uploadURL'],
             $this->kcfOptions['uploadURL'].'/'.$this->kcfOptions['thumbsDir'],

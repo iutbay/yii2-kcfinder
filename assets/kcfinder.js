@@ -68,13 +68,16 @@
 		if (url.search(thumbsUrl) == -1) {
 			thumbUrl = url.replace(uploadURL, thumbsUrl);
 		}
+		
+		// replace %
+		url = url.replace('%25', '%');
 
 		// add thumb
 		var tpl = this.options.thumbTemplate;
 		var thumb = tpl
-				.replace('{thumbSrc}', thumbUrl)
-				.replace('{inputName}', this.options.inputName)
-				.replace('{inputValue}', url);
+			.replace('{thumbSrc}', thumbUrl)
+			.replace('{inputName}', this.options.inputName)
+			.replace('{inputValue}', url);
 		this.$thumbs.append(thumb);
 	};
 
@@ -89,14 +92,12 @@
 		var kthis = this;
 		window.KCFinder = {
 			callBack: function(url) {
-				console.log('callBack : ' + url);
 				kthis.addThumb(url);
 				window.KCFinder = null;
 				if ($iframeModal)
 					$iframeModal.modal('hide');
 			},
 			callBackMultiple: function(files) {
-				console.log('callBackMultiple : ' + files);
 				for (var i=0; i < files.length; i++) {
 					kthis.addThumb(files[i]);
 				}
