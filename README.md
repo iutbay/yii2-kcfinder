@@ -9,7 +9,14 @@ Installation
 ------------
 The preferred way to install this helper is through [composer](http://getcomposer.org/download/).
 
-Either run
+Since kcfinder package do not have stable release on packagist, you should use these settings in your `composer.json` file :
+
+```json
+"minimum-stability": "dev",
+"prefer-stable": true,
+```
+
+After, either run
 
 ```
 php composer.phar require "iutbay/yii2-kcfinder" "*"
@@ -22,13 +29,6 @@ or add
 ```
 
 to the require section of your application's `composer.json` file.
-
-And since kcfinder package do not have stable release on packagist, you should use these settings in your `composer.json` file :
-
-```json
-"minimum-stability": "dev",
-"prefer-stable": true,
-```
 
 Widget Use
 ----------
