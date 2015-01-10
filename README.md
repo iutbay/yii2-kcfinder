@@ -23,6 +23,13 @@ or add
 
 to the require section of your application's `composer.json` file.
 
+And since kcfinder package do not have stable release on packagist, you should use these settings in your `composer.json` file :
+
+```json
+"minimum-stability": "dev",
+"prefer-stable": true,
+```
+
 Widget Use
 ----------
 
