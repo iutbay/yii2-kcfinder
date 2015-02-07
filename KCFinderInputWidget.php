@@ -10,6 +10,7 @@ use yii\widgets\InputWidget;
 use yii\bootstrap\Modal;
 
 use iutbay\yii2fontawesome\FontAwesome;
+use iutbay\yii2fontawesome\FontAwesomeAsset;
 
 /**
  * KCFinder Input Widget.
@@ -81,6 +82,7 @@ class KCFinderInputWidget extends KCFinder
                 'size' => Modal::SIZE_LARGE,
                 'options' => [
                     'class' => 'kcfinder-modal',
+                    'style' => 'z-index:1060' // will usable if used together with redactor or another widget that has z-index more than 1040
                 ],
             ]);
         }
@@ -111,6 +113,7 @@ class KCFinderInputWidget extends KCFinder
     {
         $view = $this->getView();
         KCFinderWidgetAsset::register($view);
+        FontAwesomeAsset::register($view);
         $this->clientOptions['kcfUrl'] = Yii::$app->assetManager->getPublishedUrl((new KCFinderAsset)->sourcePath);
 
         if ($this->iframe) {

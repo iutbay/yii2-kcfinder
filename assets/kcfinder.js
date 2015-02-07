@@ -71,7 +71,13 @@
 		
 		// replace %
 		url = url.replace('%25', '%');
-
+		
+		// fix thumb for non image file
+		if ($.inArray(thumbUrl.substr(thumbUrl.lastIndexOf(".")+1).toLowerCase(),["jpg","jpeg","png","gif"]) < 0)
+		{
+			thumbUrl = 	this.options.kcfUrl+"/themes/default/img/files/big/"+thumbUrl.substr(thumbUrl.lastIndexOf(".")+1)+".png";
+		}
+		
 		// add thumb
 		var tpl = this.options.thumbTemplate;
 		var thumb = tpl
@@ -79,6 +85,7 @@
 			.replace('{inputName}', this.options.inputName)
 			.replace('{inputValue}', url);
 		this.$thumbs.append(thumb);
+				
 	};
 
 	/**
