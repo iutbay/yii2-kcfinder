@@ -88,8 +88,22 @@ class KCFinderInputWidget extends KCFinder
         }
 
         $thumbs = '';
-        if ($this->hasModel() && is_array($this->model->{$this->attribute})) {
-            $images = $this->model->{$this->attribute};
+        if ($this->hasModel() && !empty($this->model->{$this->attribute})) {
+            
+            $thumbs.= strtr('<input type="hidden" name="{inputName}" value="{inputValue}">', [                    
+                    '{inputName}' => str_replace("[]","",$this->getInputName()),
+                    '{inputValue}' => null,
+                ]); // trick to ensure model value changed when all files removed
+            
+            if (is_array($this->model->{$this->attribute}))
+            {
+				$images = $this->model->{$this->attribute};
+			}
+			else
+			{
+				$images	= array($this->model->{$this->attribute}); // this will shown a thumb when multiple set false
+			}
+			
             foreach ($images as $path) {
                 $thumbs.= strtr($this->thumbTemplate, [
                     '{thumbSrc}' => $this->getThumbSrc($path),
