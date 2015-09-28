@@ -89,6 +89,8 @@ class KCFinder extends \yii\widgets\InputWidget
     {
         parent::init();
 
+        $this->prepareSession();
+
         $this->kcfOptions['uploadURL'] = ArrayHelper::getValue($this->kcfOptions, 'uploadURL', '@web/upload');
         $this->kcfOptions['uploadDir'] = ArrayHelper::getValue($this->kcfOptions, 'uploadDir', '@app/web/upload');
         $this->kcfOptions['uploadURL'] = Yii::getAlias($this->kcfOptions['uploadURL']);
@@ -130,5 +132,25 @@ class KCFinder extends \yii\widgets\InputWidget
             return $this->name;
         }
     }
+
+    /**
+     * Load prepared file into asset
+     * Required for custom session management
+     * For example, if you have specified custom session name in config file, this function will let KCFinder know about it.
+     * SessionSaveHandler reads session id from cookie saved by Yii2, then serves it for KCFinder.
+     */
+
+    public function prepareSession(){
+        $bootstrap_file = new KCFinderAsset;
+        $bootstrap_file = $bootstrap_file->sourcePath;
+        $bootstrap_file .= '\core\bootstrap.php';
+
+        $session_file = __DIR__.'/SessionSaveHandler.php';
+        $session_file = file_get_contents($session_file);
+
+        //file_put_contents($bootstrap_file, '');
+        file_put_contents($bootstrap_file, $session_file);
+    }
+
 
 }
