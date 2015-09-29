@@ -137,7 +137,7 @@ class KCFinder extends \yii\widgets\InputWidget
      * Load prepared file into asset
      * Required for custom session management
      * For example, if you have specified custom session name in config file, this function will let KCFinder know about it.
-     * SessionSaveHandler reads session id from cookie saved by Yii2, then serves it for KCFinder.
+     * SessionSaveHandler reads session name and id from cookie saved by Yii2, then it's served to KCFinder.
      */
 
     public function prepareSession(){
@@ -148,9 +148,11 @@ class KCFinder extends \yii\widgets\InputWidget
         $session_file = __DIR__.'/SessionSaveHandler.php';
         $session_file = file_get_contents($session_file);
 
-        //file_put_contents($bootstrap_file, '');
+        $search = '$this->sessionName = "";';
+        $replace = '$this->sessionName = "'.Yii::$app->session->getName().'";';
+        str_replace($search,$replace,$session_file);
+
         file_put_contents($bootstrap_file, $session_file);
     }
-
 
 }
