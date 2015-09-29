@@ -89,8 +89,6 @@ class KCFinder extends \yii\widgets\InputWidget
     {
         parent::init();
 
-        $this->prepareSession();
-
         $this->kcfOptions['uploadURL'] = ArrayHelper::getValue($this->kcfOptions, 'uploadURL', '@web/upload');
         $this->kcfOptions['uploadDir'] = ArrayHelper::getValue($this->kcfOptions, 'uploadDir', '@app/web/upload');
         $this->kcfOptions['uploadURL'] = Yii::getAlias($this->kcfOptions['uploadURL']);
@@ -141,18 +139,18 @@ class KCFinder extends \yii\widgets\InputWidget
      */
 
     public function prepareSession(){
-        $bootstrap_file = new KCFinderAsset;
-        $bootstrap_file = $bootstrap_file->sourcePath;
-        $bootstrap_file .= '\core\bootstrap.php';
-
         $session_file = __DIR__.'/SessionSaveHandler.php';
         $session_file = file_get_contents($session_file);
 
-        $search = '$this->sessionName = "";';
-        $replace = '$this->sessionName = "'.Yii::$app->session->getName().'";';
-        str_replace($search,$replace,$session_file);
+        /* Replace asset file, so original bootstrap.php file won't be touched */
+        $new_bootstrap_file = Yii::$app->assetManager->getPublishedPath((new KCFinderAsset)->sourcePath);
+        $new_bootstrap_file .= '\core\bootstrap.php';
 
-        file_put_contents($bootstrap_file, $session_file);
+        $search = ['$this->sessionName = "";', '$this->cookieName = "";'];
+        $replace = ['$this->sessionName = "'.Yii::$app->session->getName().'";', '$this->cookieName = "'.Yii::$app->session->getName().'";'];
+        $session_file = str_replace($search,$replace,$session_file);
+
+        file_put_contents($new_bootstrap_file, $session_file);
     }
 
 }
