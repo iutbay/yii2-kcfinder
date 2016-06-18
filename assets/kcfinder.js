@@ -59,8 +59,8 @@
 		// empty list
 		if (!this.options.multiple) {
 			this.clearThumbs();
-		}
-
+		}				
+		
 		// thumb url
 		var uploadURL = this.options.uploadURL,
 			thumbsUrl = uploadURL + '/' + this.options.thumbsDir,

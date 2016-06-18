@@ -14,7 +14,7 @@
 		"sunhater/kcfinder": "*",
 		"yiisoft/yii2-bootstrap": "*",
 		"yiisoft/yii2-jui": "*",
-		"iutbay/yii2-fontawesome" : "*"
+		"iutbay/yii2-fontawesome" : "dev-master"
 	},
 	"autoload": {
 		"psr-4": {"iutbay\\yii2kcfinder\\": ""}

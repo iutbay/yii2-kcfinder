@@ -104,13 +104,23 @@ class KCFinderInputWidget extends KCFinder
 				$images	= array($this->model->{$this->attribute}); // this will shown a thumb when multiple set false
 			}
 			
-            foreach ($images as $path) {
+            foreach ($images as $path) {												
+				
+				if (str_replace([".jpg",".jpeg",".png",".gif"],'',$path) != $path)
+				{
+					//$path = $this->getThumbSrc($path);						
+				}
+				else
+				{
+					$path = $this->clientOptions['kcfUrl']."/themes/default/img/files/big/".substr($path,strrpos($path,".")+1).".png";					
+				}
+					
                 $thumbs.= strtr($this->thumbTemplate, [
                     '{thumbSrc}' => $this->getThumbSrc($path),
                     '{inputName}' => $this->getInputName(),
                     '{inputValue}' => $path,
                 ]);
-            }
+			}            
         }
         $thumbs = Html::tag('ul', $thumbs, ['id' => $this->getThumbsId(), 'class' => 'kcf-thumbs']);
 
@@ -127,8 +137,12 @@ class KCFinderInputWidget extends KCFinder
     {
         $view = $this->getView();
         KCFinderWidgetAsset::register($view);
-        FontAwesomeAsset::register($view);
-        $this->clientOptions['kcfUrl'] = Yii::$app->assetManager->getPublishedUrl((new KCFinderAsset)->sourcePath);
+        FontAwesomeAsset::register($view);        
+        
+        if (!isset($this->clientOptions['kcfUrl']))
+        {
+			$this->clientOptions['kcfUrl'] = Yii::$app->assetManager->getPublishedUrl((new KCFinderAsset)->sourcePath);
+		}	
 
         if ($this->iframe) {
              $this->clientOptions['iframeModalId'] = $this->getIFrameModalId();
