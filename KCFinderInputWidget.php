@@ -88,14 +88,18 @@ class KCFinderInputWidget extends KCFinder
         }
 
         $thumbs = '';
-        if ($this->hasModel() && !empty($this->model->{$this->attribute})) {
+        if (($this->hasModel() && !empty($this->model->{$this->attribute})) || !empty($this->value)) {
             
             $thumbs.= strtr('<input type="hidden" name="{inputName}" value="{inputValue}">', [                    
                     '{inputName}' => str_replace("[]","",$this->getInputName()),
                     '{inputValue}' => null,
                 ]); // trick to ensure model value changed when all files removed
             
-            if (is_array($this->model->{$this->attribute}))
+            if (!empty($this->value))
+            {				
+				$images = is_array($this->value)?$this->value:[$this->value];
+            }
+            elseif (is_array($this->model->{$this->attribute}))
             {
 				$images = $this->model->{$this->attribute};
 			}
@@ -108,7 +112,7 @@ class KCFinderInputWidget extends KCFinder
 				
 				if (str_replace([".jpg",".jpeg",".png",".gif"],'',$path) != $path)
 				{
-					//$path = $this->getThumbSrc($path);						
+					
 				}
 				else
 				{
@@ -149,7 +153,7 @@ class KCFinderInputWidget extends KCFinder
         }
 
         $clientOptions = Json::encode($this->clientOptions);
-        $view->registerJs("jQuery('#{$this->buttonOptions['id']}').KCFinderInputWidget($clientOptions)");
+        $view->registerJs("jQuery('#{$this->buttonOptions['id']}').KCFinderInputWidget($clientOptions);");
     }
 
     public function getButtonId()
