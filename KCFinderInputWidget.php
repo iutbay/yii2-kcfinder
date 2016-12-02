@@ -23,7 +23,7 @@ class KCFinderInputWidget extends KCFinder
      * Button label
      * @var string
      */
-    public $buttonLabel = 'Add Media';
+    public $buttonLabel = 'Choose File';
 
     /**
      * Button options
@@ -35,8 +35,14 @@ class KCFinderInputWidget extends KCFinder
      * Modal title
      * @var string
      */
-    public $modalTitle = 'Media Manager';
-
+    public $modalTitle = 'File Manager';
+	
+	/**
+     * Modal hint
+     * @var string
+     */
+    public $modalHint = '<p>Masukan url file pada kolom di samping lalu tekan ok, atau unggah dan pilih file dari kotak di bawah <small>(untuk memilihnya <i>"double klik"</i> pada file yang dimaksud)</small>.</p>';
+	
     /**
      * Main template
      * @var array
@@ -78,7 +84,7 @@ class KCFinderInputWidget extends KCFinder
         if ($this->iframe) {
             $button.= Modal::widget([
                 'id' => $this->getIFrameModalId(),
-                'header' => Html::tag('h4', $this->modalTitle, ['class' => 'modal-title']),
+                'header' => Html::tag('h4', $this->modalTitle, ['class' => 'modal-title','title'=>$this->modalHint]),
                 'size' => Modal::SIZE_LARGE,
                 'options' => [
                     'class' => 'kcfinder-modal',
@@ -112,15 +118,15 @@ class KCFinderInputWidget extends KCFinder
 				
 				if (str_replace([".jpg",".jpeg",".png",".gif"],'',$path) != $path)
 				{
-					
+					$thumbsrc = $this->getThumbSrc($path);
 				}
 				else
 				{
-					$path = $this->clientOptions['kcfUrl']."/themes/default/img/files/big/".substr($path,strrpos($path,".")+1).".png";					
+					$thumbsrc = $this->clientOptions['kcfUrl']."/themes/default/img/files/big/".substr($path,strrpos($path,".")+1).".png";					
 				}
 					
                 $thumbs.= strtr($this->thumbTemplate, [
-                    '{thumbSrc}' => $this->getThumbSrc($path),
+                    '{thumbSrc}' => $thumbsrc,
                     '{inputName}' => $this->getInputName(),
                     '{inputValue}' => $path,
                 ]);

@@ -116,9 +116,20 @@
 
 		var kcfUrl = this.options.kcfUrl + '/browse.php?' + $.param(this.options.browseOptions);
 		if ($iframeModal) {
-			$iframeModal.find('.modal-body').html('<iframe name="kcfinder-iframe" src="' + kcfUrl + '" class="kcfinder-iframe" ' +
-				'frameborder="0" width="100%" height="100%" marginwidth="0" marginheight="0" scrolling="no" />');
+			var hint = $('#' + this.options.iframeModalId+' .modal-title').attr('title');
+			$iframeModal.find('.modal-body').html('<div class="row"><div class="col-sm-6">'+hint+'</div><div class="col-sm-6"><div class="form-group input-group"><input class="exturl form-control" type="text" value="" /><span class="btnurl input-group-addon">OK</span></div></div></div>'+
+				'<div class="row"><div class="col-sm-12"><iframe name="kcfinder-iframe" src="' + kcfUrl + '" class="kcfinder-iframe" ' +
+				'frameborder="0" width="100%" height="100%" marginwidth="0" marginheight="0" scrolling="no" /></div></div>');
 			$iframeModal.modal('show');
+			
+			var modid = this.options.iframeModalId;
+			$('#' + modid+' .btnurl').click(function(){
+				var exturl = $('#' + modid+' .exturl').val();
+				kthis.addThumb(exturl);
+				window.KCFinder = null;
+				if ($iframeModal)
+					$iframeModal.modal('hide');
+			});
 		} else {
 			window.open(kcfUrl,
 				'kcfinder', 'status=0, toolbar=0, location=0, menubar=0, ' +
