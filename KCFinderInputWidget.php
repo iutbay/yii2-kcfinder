@@ -72,6 +72,8 @@ class KCFinderInputWidget extends KCFinder
     {
         $this->registerClientScript();
 
+        $this->prepareSession();
+
         $button = Html::button(FontAwesome::icon('picture-o') . ' ' . $this->buttonLabel, $this->buttonOptions);
         
         if ($this->iframe) {
