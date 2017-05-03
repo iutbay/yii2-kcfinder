@@ -3,7 +3,7 @@ KCFinder for Yii2
 
 [KCFinder](http://kcfinder.sunhater.com/) for Yii2.
 
-WIP...
+WARNING : I don't have time actually to maintain this repository, but take a [look here](https://github.com/iutbay/mm) (WIP)...
 
 Installation
 ------------
