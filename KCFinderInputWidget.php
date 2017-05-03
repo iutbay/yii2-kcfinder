@@ -10,6 +10,7 @@ use yii\widgets\InputWidget;
 use yii\bootstrap\Modal;
 
 use iutbay\yii2fontawesome\FontAwesome;
+use iutbay\yii2fontawesome\FontAwesomeAsset;
 
 /**
  * KCFinder Input Widget.
@@ -22,7 +23,7 @@ class KCFinderInputWidget extends KCFinder
      * Button label
      * @var string
      */
-    public $buttonLabel = 'Add Media';
+    public $buttonLabel = 'Choose File';
 
     /**
      * Button options
@@ -34,8 +35,14 @@ class KCFinderInputWidget extends KCFinder
      * Modal title
      * @var string
      */
-    public $modalTitle = 'Media Manager';
-
+    public $modalTitle = 'File Manager';
+	
+	/**
+     * Modal hint
+     * @var string
+     */
+    public $modalHint = '<p>Masukan url file pada kolom di samping lalu tekan ok, atau unggah dan pilih file dari kotak di bawah <small>(untuk memilihnya <i>"double klik"</i> pada file yang dimaksud)</small>.</p>';
+	
     /**
      * Main template
      * @var array
@@ -77,24 +84,53 @@ class KCFinderInputWidget extends KCFinder
         if ($this->iframe) {
             $button.= Modal::widget([
                 'id' => $this->getIFrameModalId(),
-                'header' => Html::tag('h4', $this->modalTitle, ['class' => 'modal-title']),
+                'header' => Html::tag('h4', $this->modalTitle, ['class' => 'modal-title','title'=>$this->modalHint]),
                 'size' => Modal::SIZE_LARGE,
                 'options' => [
                     'class' => 'kcfinder-modal',
+                    'style' => 'z-index:1060' // will usable if used together with redactor or another widget that has z-index more than 1040
                 ],
             ]);
         }
 
         $thumbs = '';
-        if ($this->hasModel() && is_array($this->model->{$this->attribute})) {
-            $images = $this->model->{$this->attribute};
-            foreach ($images as $path) {
+        if (($this->hasModel() && !empty($this->model->{$this->attribute})) || !empty($this->value)) {
+            
+            $thumbs.= strtr('<input type="hidden" name="{inputName}" value="{inputValue}">', [                    
+                    '{inputName}' => str_replace("[]","",$this->getInputName()),
+                    '{inputValue}' => null,
+                ]); // trick to ensure model value changed when all files removed
+            
+            if (!empty($this->value))
+            {				
+				$images = is_array($this->value)?$this->value:[$this->value];
+            }
+            elseif (is_array($this->model->{$this->attribute}))
+            {
+				$images = $this->model->{$this->attribute};
+			}
+			else
+			{
+				$images	= array($this->model->{$this->attribute}); // this will shown a thumb when multiple set false
+			}
+			
+            foreach ($images as $path) {												
+				
+				if (str_replace([".jpg",".jpeg",".png",".gif"],'',$path) != $path)
+				{
+					$thumbsrc = $this->getThumbSrc($path);
+				}
+				else
+				{
+					$thumbsrc = $this->clientOptions['kcfUrl']."/themes/default/img/files/big/".substr($path,strrpos($path,".")+1).".png";					
+				}
+					
                 $thumbs.= strtr($this->thumbTemplate, [
-                    '{thumbSrc}' => $this->getThumbSrc($path),
+                    '{thumbSrc}' => $thumbsrc,
                     '{inputName}' => $this->getInputName(),
                     '{inputValue}' => $path,
                 ]);
-            }
+			}            
         }
         $thumbs = Html::tag('ul', $thumbs, ['id' => $this->getThumbsId(), 'class' => 'kcf-thumbs']);
 
@@ -111,14 +147,19 @@ class KCFinderInputWidget extends KCFinder
     {
         $view = $this->getView();
         KCFinderWidgetAsset::register($view);
-        $this->clientOptions['kcfUrl'] = Yii::$app->assetManager->getPublishedUrl((new KCFinderAsset)->sourcePath);
+        FontAwesomeAsset::register($view);        
+        
+        if (!isset($this->clientOptions['kcfUrl']))
+        {
+			$this->clientOptions['kcfUrl'] = Yii::$app->assetManager->getPublishedUrl((new KCFinderAsset)->sourcePath);
+		}	
 
         if ($this->iframe) {
              $this->clientOptions['iframeModalId'] = $this->getIFrameModalId();
         }
 
         $clientOptions = Json::encode($this->clientOptions);
-        $view->registerJs("jQuery('#{$this->buttonOptions['id']}').KCFinderInputWidget($clientOptions)");
+        $view->registerJs("jQuery('#{$this->buttonOptions['id']}').KCFinderInputWidget($clientOptions);");
     }
 
     public function getButtonId()
