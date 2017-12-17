@@ -90,7 +90,7 @@ class KCFinder extends \yii\widgets\InputWidget
         parent::init();
 
         $this->kcfOptions['uploadURL'] = ArrayHelper::getValue($this->kcfOptions, 'uploadURL', '@web/upload');
-        $this->kcfOptions['uploadDir'] = ArrayHelper::getValue($this->kcfOptions, 'uploadDir', '@app/web/upload');
+        $this->kcfOptions['uploadDir'] = ArrayHelper::getValue($this->kcfOptions, 'uploadDir', '@webroot/upload');
         $this->kcfOptions['uploadURL'] = Yii::getAlias($this->kcfOptions['uploadURL']);
         $this->kcfOptions['uploadDir'] = Yii::getAlias($this->kcfOptions['uploadDir']);
         
