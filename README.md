@@ -53,51 +53,12 @@ echo $form->field($model, 'images')->widget(KCFinderInputWidget::className(), [
 
 Use with 2amigos/yii2-ckeditor-widget
 -------------------------------------
-You should extend ```\dosamigos\ckeditor\CKEditor```, e.g. :
+You should use extended CKEditor widget ```iutbay\yii2kcfinder\CKEditor```, e.g. :
 
 ```php
-namespace app\widgets;
-
-use yii\helpers\ArrayHelper;
-
-use iutbay\yii2kcfinder\KCFinderAsset;
-
-class CKEditor extends \dosamigos\ckeditor\CKEditor
-{
-
-	public $enableKCFinder = true;
-
-	/**
-	 * Registers CKEditor plugin
-	 */
-	protected function registerPlugin()
-	{
-		if ($this->enableKCFinder)
-		{
-			$this->registerKCFinder();
-		}
-
-		parent::registerPlugin();
-	}
-
-	/**
-	 * Registers KCFinder
-	 */
-	protected function registerKCFinder()
-	{
-		$register = KCFinderAsset::register($this->view);
-		$kcfinderUrl = $register->baseUrl;
-
-		$browseOptions = [
-			'filebrowserBrowseUrl' => $kcfinderUrl . '/browse.php?opener=ckeditor&type=files',
-			'filebrowserUploadUrl' => $kcfinderUrl . '/upload.php?opener=ckeditor&type=files',
-		];
-
-		$this->clientOptions = ArrayHelper::merge($browseOptions, $this->clientOptions);
-	}
-
-}
+\iutbay\yii2kcfinder\CKEditor::widget();
 ```
+Widget has enableKCFinder option for enable\disable KCFinder.
 
 You should then set KCFinder options using session var, e.g. :
 
